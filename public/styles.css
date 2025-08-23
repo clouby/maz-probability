@@ -1,6 +1,6 @@
 body {
-    font-family: 'Press Start 2P', cursive;
-    background-image: url('https://placehold.co/1920x1080/4c3b2e/4c3b2e'); /* Color rústico de fondo */
+    font-family: "Jacquard 24", cursive;
+    background-image: url("https://placehold.co/1920x1080/4c3b2e/4c3b2e"); /* Color rústico de fondo */
     background-size: cover;
     background-position: center;
     color: #2e1d0f; /* Color de texto más oscuro */
@@ -31,13 +31,17 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 h1 {
     color: #8b0000; /* Color rojo de fantasía */
-    font-size: 1.5em;
+    font-size: 3.5em;
     text-shadow: 2px 2px #4b0082;
     margin: 0 0 10px;
 }
@@ -76,8 +80,9 @@ h1 {
     color: #2e1d0f;
 }
 
-.player-input input, .player-input select {
-    font-family: 'Press Start 2P', cursive;
+.player-input input,
+.player-input select {
+    font-family: "Press Start 2P", cursive;
     background-color: #e5d7c3;
     border: 1px solid #6b5840;
     color: #2e1d0f;
@@ -99,7 +104,7 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 5px 0 #3b3026;
     transition: all 0.1s ease;
-    font-family: 'Press Start 2P', cursive;
+    font-family: "Press Start 2P", cursive;
     margin-top: 20px;
 }
 
@@ -183,7 +188,9 @@ h1 {
     height: 100%;
     background-color: #ff0000;
     width: 100%;
-    transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+    transition:
+        width 0.5s ease-in-out,
+        background-color 0.5s ease-in-out;
     border-radius: 5px;
 }
 
@@ -218,13 +225,25 @@ h1 {
 }
 
 @keyframes logEntry {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.log-guerrero { color: #8b0000; }
-.log-mago { color: #4b0082; }
-.log-arquero { color: #006400; }
+.log-guerrero {
+    color: #8b0000;
+}
+.log-mago {
+    color: #4b0082;
+}
+.log-arquero {
+    color: #006400;
+}
 
 .actions-container {
     display: flex;
@@ -252,7 +271,7 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 5px 0 #3b3026;
     transition: all 0.1s ease;
-    font-family: 'Press Start 2P', cursive;
+    font-family: "Press Start 2P", cursive;
 }
 
 .action-button:hover {
@@ -275,7 +294,11 @@ h1 {
 
 /* Estilos de botones de ataque especial */
 .special-guerrero {
-    background-image: linear-gradient(to right, #a0522d, #8b4513); /* Marrón rojizo */
+    background-image: linear-gradient(
+        to right,
+        #a0522d,
+        #8b4513
+    ); /* Marrón rojizo */
     box-shadow: 0 5px 0 #5c3000;
 }
 
@@ -285,7 +308,11 @@ h1 {
 }
 
 .special-mago {
-    background-image: linear-gradient(to right, #8b0000, #4b0082); /* Rojo oscuro a morado */
+    background-image: linear-gradient(
+        to right,
+        #8b0000,
+        #4b0082
+    ); /* Rojo oscuro a morado */
     box-shadow: 0 5px 0 #3b0042;
 }
 
@@ -295,7 +322,11 @@ h1 {
 }
 
 .special-arquero {
-    background-image: linear-gradient(to right, #228b22, #006400); /* Verde bosque */
+    background-image: linear-gradient(
+        to right,
+        #228b22,
+        #006400
+    ); /* Verde bosque */
     box-shadow: 0 5px 0 #004200;
 }
 
@@ -313,8 +344,12 @@ h1 {
 }
 
 @keyframes diceRoll {
-    from { transform: rotate(0deg) scale(1); }
-    to { transform: rotate(15deg) scale(1.1); }
+    from {
+        transform: rotate(0deg) scale(1);
+    }
+    to {
+        transform: rotate(15deg) scale(1.1);
+    }
 }
 
 .message-box {
@@ -351,7 +386,7 @@ h1 {
     border-radius: 8px;
     box-shadow: 0 5px 0 #5c3000;
     transition: all 0.1s ease;
-    font-family: 'Press Start 2P', cursive;
+    font-family: "Press Start 2P", cursive;
 }
 
 .message-box button:hover {
@@ -369,7 +404,7 @@ h1 {
     position: absolute;
     top: 20px;
     right: 20px;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
     border-radius: 50%;
@@ -378,7 +413,7 @@ h1 {
     cursor: pointer;
     font-size: 1.2em;
     z-index: 101;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 @media (max-width: 600px) {
