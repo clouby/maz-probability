@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Mazmorra de las PROBABILIDADES</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-image: url('https://placehold.co/1920x1080/4c3b2e/4c3b2e'); /* Color rústico de fondo */
+            background-size: cover;
+            background-position: center;
+            color: #2e1d0f; /* Color de texto más oscuro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #4c3b2e;
+        }
+        .screen {
+            width: 100%;
+            max-width: 800px;
+            background-color: #f5f5dc; /* Color de pergamino */
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" style="fill:url(%23noiseFilter); opacity:0.1;"/%3E%3C/svg%3E'); /* Textura de pergamino */
+            border: 5px solid #6b5840; /* Borde de madera oscura */
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        h1 {
+            color: #8b0000; /* Color rojo de fantasía */
+            font-size: 1.5em;
+            text-shadow: 2px 2px #4b0082;
+            margin: 0 0 10px;
+        }
+        .start-screen {
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .character-select-screen {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .player-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .player-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 10px;
+            border: 2px solid #6b5840;
+            border-radius: 8px;
+            background-color: #d2b48c; /* Color de tabla */
+        }
+        .player-input label {
+            text-align: left;
+            font-size: 0.8em;
+            color: #2e1d0f;
+        }
+        .player-input input, .player-input select {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #e5d7c3;
+            border: 1px solid #6b5840;
+            color: #2e1d0f;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 0.7em;
+        }
+        .start-button {
+            background-image: linear-gradient(to right, #6b5840, #5c4b38);
+            border: none;
+            color: #f5f5dc;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 5px 0 #3b3026;
+            transition: all 0.1s ease;
+            font-family: 'Press Start 2P', cursive;
+            margin-top: 20px;
+        }
+        .start-button:hover {
+            background-image: linear-gradient(to right, #5c4b38, #3b3026);
+            box-shadow: 0 3px 0 #2b221a;
+            transform: translateY(2px);
+        }
+        .start-button:active {
+            box-shadow: 0 0 0 #2b221a;
+            transform: translateY(5px);
+        }
+        .start-button:disabled {
+            background-image: none;
+            background-color: #8b7d6a;
+            box-shadow: 0 5px 0 #6b5840;
+            cursor: not-allowed;
+        }
+        .game-screen {
+            display: none;
+        }
+        .turn-counter {
+            font-size: 1em;
+            color: #8b0000;
+            text-shadow: 1px 1px #4b0082;
+            margin-bottom: 10px;
+        }
+        .player-stats-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .character-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+            font-size: 0.8em;
+            background-color: #d2b48c;
+            border: 2px solid #6b5840;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #2e1d0f;
+        }
+        .stat i {
+            margin-right: 5px;
+            font-size: 1.5em;
+            color: #8b0000;
+        }
+        .player-icon {
+            font-size: 1.5em;
+            width: 100px;
+            height: 100px;
+        }
+        .health-bar-container {
+            width: 100%;
+            height: 15px;
+            background-color: #6b5840;
+            border: 1px solid #2e1d0f;
+            border-radius: 5px;
+            position: relative;
+        }
+        .health-bar {
+            height: 100%;
+            background-color: #ff0000;
+            width: 100%;
+            transition: width 0.5s ease-in-out, background-color 0.5s ease-in-out;
+            border-radius: 5px;
+        }
+        .health-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.6em;
+            color: #fff;
+            text-shadow: 1px 1px #000;
+        }
+        #game-log {
+            height: 150px;
+            background-color: #d2b48c;
+            border: 2px solid #6b5840;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.7em;
+            line-height: 1.5;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+            word-wrap: break-word;
+            color: #2e1d0f;
+        }
+        #game-log p {
+            margin: 0;
+            animation: logEntry 0.5s ease-out;
+        }
+        @keyframes logEntry {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .log-guerrero { color: #8b0000; }
+        .log-mago { color: #4b0082; }
+        .log-arquero { color: #006400; }
+        
+        .actions-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex: 1;
+        }
+        .action-button {
+            background-image: linear-gradient(to right, #6b5840, #5c4b38);
+            border: none;
+            color: #f5f5dc;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 5px 0 #3b3026;
+            transition: all 0.1s ease;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .action-button:hover {
+            background-image: linear-gradient(to right, #5c4b38, #3b3026);
+            box-shadow: 0 3px 0 #2b221a;
+            transform: translateY(2px);
+        }
+        .action-button:active {
+            box-shadow: 0 0 0 #2b221a;
+            transform: translateY(5px);
+        }
+        .action-button:disabled {
+            background-image: none;
+            background-color: #8b7d6a;
+            box-shadow: 0 5px 0 #6b5840;
+            cursor: not-allowed;
+        }
+        /* Estilos de botones de ataque especial */
+        .special-guerrero {
+            background-image: linear-gradient(to right, #a0522d, #8b4513); /* Marrón rojizo */
+            box-shadow: 0 5px 0 #5c3000;
+        }
+        .special-guerrero:hover {
+            background-image: linear-gradient(to right, #8b4513, #5c3000);
+            box-shadow: 0 3px 0 #4c2600;
+        }
+        .special-mago {
+            background-image: linear-gradient(to right, #8b0000, #4b0082); /* Rojo oscuro a morado */
+            box-shadow: 0 5px 0 #3b0042;
+        }
+        .special-mago:hover {
+            background-image: linear-gradient(to right, #4b0082, #3b0042);
+            box-shadow: 0 3px 0 #2a0030;
+        }
+        .special-arquero {
+            background-image: linear-gradient(to right, #228b22, #006400); /* Verde bosque */
+            box-shadow: 0 5px 0 #004200;
+        }
+        .special-arquero:hover {
+            background-image: linear-gradient(to right, #006400, #004200);
+            box-shadow: 0 3px 0 #003000;
+        }
+        #dice-roll {
+            margin-top: 10px;
+            font-size: 2em;
+            color: #8b0000;
+            text-shadow: 2px 2px #4b0082;
+            animation: diceRoll 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes diceRoll {
+            from { transform: rotate(0deg) scale(1); }
+            to { transform: rotate(15deg) scale(1.1); }
+        }
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f5f5dc;
+            border: 5px solid #6b5840;
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            color: #2e1d0f;
+        }
+        .message-box h2 {
+            font-size: 1.5em;
+            color: #8b0000;
+            margin: 0;
+        }
+        .message-box button {
+            background-image: linear-gradient(to right, #a0522d, #8b4513);
+            color: #f5f5dc;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.8em;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 5px 0 #5c3000;
+            transition: all 0.1s ease;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .message-box button:hover {
+            background-image: linear-gradient(to right, #8b4513, #5c3000);
+            box-shadow: 0 3px 0 #4c2600;
+            transform: translateY(2px);
+        }
+        .message-box button:active {
+            box-shadow: 0 0 0 #4c2600;
+            transform: translateY(5px);
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.2em;
+            }
+            .screen {
+                padding: 15px;
+            }
+            .player-stats-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .actions-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .actions {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            .action-button {
+                width: 45%;
+                font-size: 0.7em;
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de Inicio -->
+    <div id="start-screen" class="screen start-screen">
+        <h1>¡La Mazmorra de las PROBABILIDADES!</h1>
+        <button id="start-button" class="start-button">Comenzar Aventura</button>
+    </div>
+
+    <!-- Pantalla de selección de personajes -->
+    <div id="character-select-screen" class="screen character-select-screen">
+        <h1>Selecciona tus Personajes</h1>
+        <div class="player-inputs">
+            <!-- Jugador 1 -->
+            <div class="player-input">
+                <label for="player1-name">Nombre del Jugador 1:</label>
+                <input type="text" id="player1-name" placeholder="Ej: Héroe">
+                <label for="player1-role">Rol del Jugador 1:</label>
+                <select id="player1-role">
+                    <option value="guerrero">Guerrero</option>
+                    <option value="mago">Mago</option>
+                    <option value="arquero">Arquero</option>
+                </select>
+            </div>
+            <!-- Jugador 2 -->
+            <div class="player-input">
+                <label for="player2-name">Nombre del Jugador 2:</label>
+                <input type="text" id="player2-name" placeholder="Ej: Villano">
+                <label for="player2-role">Rol del Jugador 2:</label>
+                <select id="player2-role">
+                    <option value="guerrero">Guerrero</option>
+                    <option value="mago">Mago</option>
+                    <option value="arquero">Arquero</option>
+                </select>
+            </div>
+        </div>
+        <button id="start-game-button" class="start-button">¡Que Comience el Combate!</button>
+    </div>
+
+    <!-- Pantalla del Juego (oculta por defecto) -->
+    <div id="game-screen" class="screen game-screen">
+        <div class="turn-counter">
+            Turno: <span id="turn-count">1</span>
+        </div>
+        <!-- Contenedor de estadísticas de los jugadores -->
+        <div class="player-stats-container">
+            <!-- Stats del Jugador 1 -->
+            <div id="player1-stats" class="character-stats">
+                <div class="stat">
+                    <span id="player1-name-display">Héroe</span>
+                    <span id="player1-role-display">Guerrero</span>
+                </div>
+                <div class="stat">
+                    <img id="player1-icon" class="player-icon"/>
+                </div>
+                <div class="stat">
+                    <div class="health-bar-container">
+                        <div id="player1-health-bar" class="health-bar"></div>
+                        <span id="player1-health-text" class="health-text">100/100</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Pociones:</span>
+                    <span id="player1-potions-count">3</span>
+                </div>
+            </div>
+            
+            <!-- Stats del Jugador 2 -->
+            <div id="player2-stats" class="character-stats">
+                <div class="stat">
+                    <span id="player2-name-display">Villano</span>
+                    <span id="player2-role-display">Guerrero</span>
+                </div>
+                <div class="stat">
+                    <img id="player2-icon" class="player-icon"/>
+                </div>
+                <div class="stat">
+                    <div class="health-bar-container">
+                        <div id="player2-health-bar" class="health-bar"></div>
+                        <span id="player2-health-text" class="health-text">100/100</span>
+                    </div>
+                </div>
+                <div class="stat">
+                    <span>Pociones:</span>
+                    <span id="player2-potions-count">3</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="game-log">
+            <p>¡Los héroes se preparan para el combate!</p>
+        </div>
+
+        <div id="dice-roll">?</div>
+
+        <!-- Contenedor de botones de acción para cada jugador -->
+        <div class="actions-container">
+            <!-- Acciones del Jugador 1 -->
+            <div id="player1-actions" class="actions">
+                <button id="player1-attack-button" class="action-button"><i class="fa-solid fa-sword"></i> Atacar</button>
+                <button id="player1-defend-button" class="action-button"><i class="fa-solid fa-shield-halved"></i> Defender</button>
+                <button id="player1-potion-button" class="action-button"><i class="fa-solid fa-flask"></i> Poción</button>
+                <button id="player1-special-button" class="action-button" disabled>Especial</button>
+            </div>
+            <!-- Acciones del Jugador 2 -->
+            <div id="player2-actions" class="actions">
+                <button id="player2-attack-button" class="action-button"><i class="fa-solid fa-sword"></i> Atacar</button>
+                <button id="player2-defend-button" class="action-button"><i class="fa-solid fa-shield-halved"></i> Defender</button>
+                <button id="player2-potion-button" class="action-button"><i class="fa-solid fa-flask"></i> Poción</button>
+                <button id="player2-special-button" class="action-button" disabled>Especial</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensaje de Fin de Juego -->
+    <div id="game-over-message" class="message-box">
+        <h2 id="game-over-text"></h2>
+        <button onclick="resetGame()">Reiniciar</button>
+    </div>
+
+    <script>
+        // Variables globales del juego
+        let player1 = {};
+        let player2 = {};
+        let currentPlayer = 1;
+        let turnCount = 0;
+
+        // Referencias a elementos del DOM
+        const startScreen = document.getElementById('start-screen');
+        const characterSelectScreen = document.getElementById('character-select-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const startButton = document.getElementById('start-button');
+        const startGameButton = document.getElementById('start-game-button');
+        const player1NameInput = document.getElementById('player1-name');
+        const player1RoleSelect = document.getElementById('player1-role');
+        const player2NameInput = document.getElementById('player2-name');
+        const player2RoleSelect = document.getElementById('player2-role');
+        
+        const player1HealthBar = document.getElementById('player1-health-bar');
+        const player1HealthText = document.getElementById('player1-health-text');
+        const player1NameDisplay = document.getElementById('player1-name-display');
+        const player1RoleDisplay = document.getElementById('player1-role-display');
+        const player1PotionsCount = document.getElementById('player1-potions-count');
+        const player1Icon = document.getElementById('player1-icon');
+
+        const player2HealthBar = document.getElementById('player2-health-bar');
+        const player2HealthText = document.getElementById('player2-health-text');
+        const player2NameDisplay = document.getElementById('player2-name-display');
+        const player2RoleDisplay = document.getElementById('player2-role-display');
+        const player2PotionsCount = document.getElementById('player2-potions-count');
+        const player2Icon = document.getElementById('player2-icon');
+
+        const player1Actions = document.getElementById('player1-actions');
+        const player2Actions = document.getElementById('player2-actions');
+
+        const gameLog = document.getElementById('game-log');
+        const diceRollDisplay = document.getElementById('dice-roll');
+        const turnCountDisplay = document.getElementById('turn-count');
+        const gameOverMessage = document.getElementById('game-over-message');
+        const gameOverText = document.getElementById('game-over-text');
+
+        const logColors = {
+            'guerrero': '#8b0000',
+            'mago': '#4b0082',
+            'arquero': '#006400'
+        };
+        
+        // Función para agregar un mensaje al log con estilo
+        function addLog(message, color) {
+            const p = document.createElement('p');
+            if (color) {
+                p.style.color = color;
+            }
+            p.textContent = `> ${message}`;
+            gameLog.appendChild(p);
+            gameLog.scrollTop = gameLog.scrollHeight;
+        }
+
+        // Función para actualizar las barras de vida
+        function updateHealthBars() {
+            player1HealthBar.style.width = `${player1.health}%`;
+            player1HealthText.textContent = `${player1.health}/100`;
+            player2HealthBar.style.width = `${player2.health}%`;
+            player2HealthText.textContent = `${player2.health}/100`;
+
+            const updateBarColor = (health, bar) => {
+                if (health < 30) {
+                    bar.style.backgroundColor = '#ff0000';
+                } else if (health < 60) {
+                    bar.style.backgroundColor = '#ffc107';
+                } else {
+                    bar.style.backgroundColor = '#00ff00';
+                }
+            };
+            
+            updateBarColor(player1.health, player1HealthBar);
+            updateBarColor(player2.health, player2HealthBar);
+        }
+
+        // Función para terminar el juego
+        function endGame(winnerName) {
+            disableAllButtons();
+            gameOverText.textContent = `¡${winnerName} ha ganado!`;
+            gameOverMessage.style.display = 'flex';
+        }
+        
+        // Función para restablecer el juego al estado inicial
+        function resetGame() {
+            // Restablecer variables
+            player1 = {};
+            player2 = {};
+            currentPlayer = 1;
+            turnCount = 0;
+
+            // Limpiar la interfaz de usuario
+            gameLog.innerHTML = '<p>¡Los héroes se preparan para el combate!</p>';
+            turnCountDisplay.textContent = turnCount;
+            gameOverMessage.style.display = 'none';
+            gameScreen.style.display = 'none';
+            characterSelectScreen.style.display = 'none';
+            startScreen.style.display = 'flex';
+        }
+
+        // Función para deshabilitar todos los botones de acción
+        function disableAllButtons() {
+            const allButtons = document.querySelectorAll('.actions button');
+            allButtons.forEach(button => {
+                button.disabled = true;
+            });
+        }
+
+        // Función para habilitar los botones del jugador actual
+        function enableCurrentPlayerButtons() {
+            disableAllButtons();
+            const player = currentPlayer === 1 ? player1 : player2;
+            const actionsDiv = currentPlayer === 1 ? player1Actions : player2Actions;
+
+            actionsDiv.querySelectorAll('button').forEach(button => {
+                button.disabled = false;
+            });
+
+            // El botón de ataque especial se deshabilita hasta que el dado saque 6
+            player.specialButton.disabled = true;
+            
+            // Si el ataque especial ya se usó, se mantiene deshabilitado permanentemente
+            if (player.specialUsed) {
+                player.specialButton.disabled = true;
+            }
+        }
+
+        // Función de turno
+        function playerTurn(action, diceRoll) {
+            const attacker = currentPlayer === 1 ? player1 : player2;
+            const defender = currentPlayer === 1 ? player2 : player1;
+            
+            disableAllButtons();
+            
+            turnCount++;
+            turnCountDisplay.textContent = turnCount;
+            
+            diceRollDisplay.textContent = diceRoll;
+            
+            addLog(`${attacker.name} (${attacker.role}) tira el dado y obtiene un ${diceRoll}.`, logColors[attacker.role]);
+
+            let damage = 0;
+            let logMessage = '';
+
+            if (action === 'attack') {
+                // Lógica de ataque normal unificada para todos los roles
+                damage = (diceRoll > 3) ? 20 : (diceRoll === 3 ? 15 : 5);
+                logMessage = (diceRoll > 3) ? `¡${attacker.name} asesta un golpe poderoso con su ataque!` : `El ataque de ${attacker.name} es menos efectivo.`;
+            } else if (action === 'special') {
+                // Lógica de ataque especial
+                attacker.specialUsed = true;
+                damage = 20; // Daño base del ataque especial
+                switch (attacker.role) {
+                    case 'guerrero':
+                        damage *= (diceRoll > 3) ? 2 : (diceRoll === 3 ? 1.5 : 1);
+                        logMessage = `¡${attacker.name} desata su Espada Gigante de Acero!`;
+                        break;
+                    case 'mago':
+                        damage *= (diceRoll > 4) ? 2.5 : (diceRoll >= 2 ? 1.5 : 0.5);
+                        logMessage = `¡${attacker.name} invoca una Bola de Fuego Gigante!`;
+                        break;
+                    case 'arquero':
+                        damage *= (diceRoll > 2) ? 2 : 1.2;
+                        logMessage = `¡${attacker.name} dispara una Lluvia de Flechas Venenosas!`;
+                        if (diceRoll === 6) {
+                            damage *= 1.5;
+                            logMessage += ` ¡Y acierta todas!`;
+                        }
+                        break;
+                }
+            } else if (action === 'defend') {
+                attacker.isDefending = true;
+                addLog(`${attacker.name} se prepara para defenderse del próximo ataque.`);
+                // Cambiar de turno
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                addLog(`Es el turno de ${currentPlayer === 1 ? player1.name : player2.name}.`);
+                // Habilitar botones del nuevo jugador
+                setTimeout(enableCurrentPlayerButtons, 500); 
+                return; // Termina el turno sin infligir daño
+            } else if (action === 'potion') {
+                if (attacker.potions > 0) {
+                    const healAmount = diceRoll * 5;
+                    attacker.health += healAmount;
+                    if (attacker.health > 100) attacker.health = 100;
+                    attacker.potions--;
+                    addLog(`${attacker.name} usa una poción y se cura ${healAmount} puntos de vida. Le quedan ${attacker.potions} pociones.`);
+                    updatePotionsCount();
+                } else {
+                    addLog(`A ${attacker.name} no le quedan pociones. Pierde el turno.`);
+                }
+                // Cambiar de turno
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                addLog(`Es el turno de ${currentPlayer === 1 ? player1.name : player2.name}.`);
+                // Habilitar botones del nuevo jugador
+                setTimeout(enableCurrentPlayerButtons, 500); 
+                return; // Termina el turno sin infligir daño
+            }
+
+            if (defender.isDefending) {
+                damage *= 0.5;
+                addLog(`${defender.name} se defiende y reduce el daño a ${damage.toFixed(0)}.`);
+                defender.isDefending = false;
+            }
+            
+            defender.health -= damage;
+            addLog(`¡${attacker.name} inflige ${damage.toFixed(0)} de daño a ${defender.name}!`);
+
+            if (defender.health <= 0) {
+                defender.health = 0;
+                updateHealthBars();
+                endGame(attacker.name);
+                return;
+            }
+
+            updateHealthBars();
+
+            // Cambiar de turno
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            addLog(`Es el turno de ${currentPlayer === 1 ? player1.name : player2.name}.`);
+
+            // Habilitar botones del nuevo jugador
+            setTimeout(enableCurrentPlayerButtons, 500); // Pequeño retraso para que se vea el cambio
+        }
+
+        // Función para manejar el turno completo, incluyendo el lanzamiento del dado
+        function handleTurn(action) {
+            const diceRoll = Math.floor(Math.random() * 6) + 1;
+            const attacker = currentPlayer === 1 ? player1 : player2;
+
+            // Deshabilitar todos los botones temporalmente mientras se decide el turno
+            disableAllButtons();
+
+            // Lanza el dado y muestra el resultado en el log
+            diceRollDisplay.textContent = diceRoll;
+            addLog(`${attacker.name} tira el dado y obtiene un ${diceRoll}.`, logColors[attacker.role]);
+
+            // Si el dado es 6, habilita el botón especial si no se ha usado y se le da la opción de usarlo
+            if (diceRoll === 6 && !attacker.specialUsed) {
+                attacker.specialButton.disabled = false;
+                addLog(`¡El dado sacó un 6! ${attacker.name} puede usar su ataque especial.`, logColors[attacker.role]);
+                // Espera a la selección del usuario
+                const actionsDiv = currentPlayer === 1 ? player1Actions : player2Actions;
+                actionsDiv.querySelectorAll('button').forEach(button => {
+                    button.addEventListener('click', function(event) {
+                        // Evita múltiples listeners
+                        event.stopImmediatePropagation();
+                        const newAction = event.target.id.includes('special') ? 'special' : 'attack'; // Asume que solo se puede elegir especial o normal
+                        playerTurn(newAction, diceRoll);
+                        actionsDiv.querySelectorAll('button').forEach(btn => btn.removeEventListener('click', arguments.callee));
+                    });
+                });
+            } else {
+                 playerTurn(action, diceRoll);
+            }
+        }
+        
+        // Función para actualizar el contador de pociones
+        function updatePotionsCount() {
+            player1PotionsCount.textContent = player1.potions;
+            player2PotionsCount.textContent = player2.potions;
+        }
+
+        // Función para actualizar el icono de un jugador
+        function updatePlayerIcon(player, element) {
+            let icon = '';
+            switch (player.role) {
+                case 'guerrero':
+                    icon = '⚔️'; // Espadas cruzadas
+                    break;
+                case 'mago':
+                    icon = '🧙'; // Mago
+                    break;
+                case 'arquero':
+                    icon = '🏹'; // Arco y flecha
+                    break;
+            }
+          element.src = `/${player.role}.png`;
+        }
+
+        // Evento para el botón de inicio (pantalla inicial)
+        startButton.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            characterSelectScreen.style.display = 'flex';
+        });
+
+        // Evento para el botón de iniciar el juego (selección de personajes)
+        startGameButton.addEventListener('click', () => {
+            const player1Name = player1NameInput.value.trim() || 'Héroe 1';
+            const player2Name = player2NameInput.value.trim() || 'Héroe 2';
+            const player1Role = player1RoleSelect.value;
+            const player2Role = player2RoleSelect.value;
+            
+            // Inicializar objetos de jugadores
+            player1 = {
+                name: player1Name,
+                role: player1Role,
+                health: 100,
+                potions: 3,
+                specialUsed: false,
+                isDefending: false,
+                attackButton: document.getElementById('player1-attack-button'),
+                defendButton: document.getElementById('player1-defend-button'),
+                potionButton: document.getElementById('player1-potion-button'),
+                specialButton: document.getElementById('player1-special-button'),
+            };
+            player2 = {
+                name: player2Name,
+                role: player2Role,
+                health: 100,
+                potions: 3,
+                specialUsed: false,
+                isDefending: false,
+                attackButton: document.getElementById('player2-attack-button'),
+                defendButton: document.getElementById('player2-defend-button'),
+                potionButton: document.getElementById('player2-potion-button'),
+                specialButton: document.getElementById('player2-special-button'),
+            };
+
+            // Configurar botones especiales por rol
+            const setSpecialButton = (player) => {
+                let buttonText = '';
+                let className = '';
+                let iconClass = '';
+                switch(player.role) {
+                    case 'guerrero':
+                        buttonText = 'Espada Gigante de Acero';
+                        className = 'special-guerrero';
+                        iconClass = 'fa-solid fa-gavel';
+                        break;
+                    case 'mago':
+                        buttonText = 'Bola de Fuego Gigante';
+                        className = 'special-mago';
+                        iconClass = 'fa-solid fa-fire';
+                        break;
+                    case 'arquero':
+                        buttonText = 'Lluvia de Flechas Venenosas';
+                        className = 'special-arquero';
+                        iconClass = 'fa-solid fa-feather-pointed';
+                        break;
+                }
+                player.specialButton.textContent = '';
+                const icon = document.createElement('i');
+                icon.className = iconClass;
+                const span = document.createElement('span');
+                span.textContent = ' ' + buttonText;
+                player.specialButton.appendChild(icon);
+                player.specialButton.appendChild(span);
+                player.specialButton.classList.add(className);
+            };
+
+            setSpecialButton(player1);
+            setSpecialButton(player2);
+
+            // Actualizar la interfaz del juego con los datos de los jugadores
+            player1NameDisplay.textContent = player1.name;
+            player1RoleDisplay.textContent = player1.role.charAt(0).toUpperCase() + player1.role.slice(1);
+            player2NameDisplay.textContent = player2.name;
+            player2RoleDisplay.textContent = player2.role.charAt(0).toUpperCase() + player2.role.slice(1);
+            
+            // Actualizar los íconos de los jugadores
+            updatePlayerIcon(player1, player1Icon);
+            updatePlayerIcon(player2, player2Icon);
+
+            characterSelectScreen.style.display = 'none';
+            gameScreen.style.display = 'flex';
+            updateHealthBars();
+            updatePotionsCount();
+
+            // Asignar eventos a los botones de acción
+            player1.attackButton.addEventListener('click', () => handleTurn('attack'));
+            player1.defendButton.addEventListener('click', () => handleTurn('defend'));
+            player1.potionButton.addEventListener('click', () => handleTurn('potion'));
+            player1.specialButton.addEventListener('click', () => handleTurn('special'));
+
+            player2.attackButton.addEventListener('click', () => handleTurn('attack'));
+            player2.defendButton.addEventListener('click', () => handleTurn('defend'));
+            player2.potionButton.addEventListener('click', () => handleTurn('potion'));
+            player2.specialButton.addEventListener('click', () => handleTurn('special'));
+
+            // El juego comienza con el jugador 1
+            addLog(`¡${player1.name} y ${player2.name} se enfrentan en la mazmorra!`);
+            addLog(`¡Es el turno de ${player1.name} (${player1.role})!`);
+            enableCurrentPlayerButtons();
+        });
+    </script>
+</body>
+</html>
+
