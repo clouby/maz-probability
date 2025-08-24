@@ -1,5 +1,7 @@
 # Mazmorra de Probabilidades
 
+<img width="990" height="1038" alt="Screenshot 2025-08-24 at 9 45 34 AM" src="https://github.com/user-attachments/assets/5cee4552-e05b-45f7-88d9-7f5b481682c2" />
+
 ## Propósito del Juego
 
 ¡Bienvenido a Mazmorra de Probabilidades!
