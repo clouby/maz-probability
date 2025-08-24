@@ -326,18 +326,6 @@ function updatePotionsCount() {
 
 // Función para actualizar el icono de un jugador
 function updatePlayerIcon(player, element) {
-  let icon = "";
-  switch (player.role) {
-    case "guerrero":
-      icon = "⚔️"; // Espadas cruzadas
-      break;
-    case "mago":
-      icon = "🧙"; // Mago
-      break;
-    case "arquero":
-      icon = "🏹"; // Arco y flecha
-      break;
-  }
   element.src = `/${player.role}.png`;
 }
 
@@ -462,5 +450,4 @@ musicToggleButton.addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", playTypingSound);
-
 document.addEventListener("click", playTypingSound);
