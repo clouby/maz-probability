@@ -3,6 +3,7 @@ let player1 = {};
 let player2 = {};
 let currentPlayer = 1;
 let turnCount = 0;
+let diceRolledForSpecial = 0;
 
 // Referencias a elementos del DOM
 const startScreen = document.getElementById("start-screen");
@@ -282,37 +283,29 @@ function playerTurn(action, diceRoll) {
 
 // Función para manejar el turno completo, incluyendo el lanzamiento del dado
 function handleTurn(action) {
-  const diceRoll = Math.floor(Math.random() * 6) + 1;
   const attacker = currentPlayer === 1 ? player1 : player2;
 
-  // Deshabilitar todos los botones temporalmente mientras se decide el turno
-  disableAllButtons();
+  if (diceRolledForSpecial === 6) {
+    if (action === "attack" || action === "special") {
+      const diceResult = diceRolledForSpecial;
+      diceRolledForSpecial = 0; // Reset state
+      playerTurn(action, diceResult);
+    }
+    return;
+  }
 
-  // Lanza el dado y muestra el resultado en el log
-  diceRollDisplay.textContent = diceRoll;
+  const diceRoll = Math.floor(Math.random() * 6) + 1;
 
-  // Si el dado es 6, habilita el botón especial si no se ha usado y se le da la opción de usarlo
   if (diceRoll === 6 && !attacker.specialUsed) {
+    diceRolledForSpecial = 6;
+    disableAllButtons();
+    attacker.attackButton.disabled = false;
     attacker.specialButton.disabled = false;
+    diceRollDisplay.textContent = diceRoll;
     addLog(
-      `¡El dado sacó un 6! ${attacker.name} puede usar su ataque especial.`,
+      `¡El dado sacó un 6! ${attacker.name} puede usar su ataque especial o un ataque normal.`,
       logColors[attacker.role],
     );
-    // Espera a la selección del usuario
-    const actionsDiv = currentPlayer === 1 ? player1Actions : player2Actions;
-    actionsDiv.querySelectorAll("button").forEach((button) => {
-      button.addEventListener("click", function (event) {
-        // Evita múltiples listeners
-        event.stopImmediatePropagation();
-        const newAction = event.target.id.includes("special")
-          ? "special"
-          : "attack"; // Asume que solo se puede elegir especial o normal
-        playerTurn(newAction, diceRoll);
-        actionsDiv
-          .querySelectorAll("button")
-          .forEach((btn) => btn.removeEventListener("click", arguments.callee));
-      });
-    });
   } else {
     playerTurn(action, diceRoll);
   }
