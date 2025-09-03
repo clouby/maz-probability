@@ -1,3 +1,4 @@
+// Trabajo para Thiago
 // Variables globales del juego
 let player1 = {};
 let player2 = {};
